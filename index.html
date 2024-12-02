@@ -1,19 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>Tiled WMS</title>
-    <link rel="stylesheet" href="node_modules/ol/ol.css">
-    <style>
-      .map {
-        width: 100%;
-        height: 400px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map" class="map"></div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viettel Map with WMS Layer</title>
 
-    <script type="module" src="main.js"></script>
-  </body>
+    <!-- Leaflet CSS từ CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <style>
+        /* Chỉnh sửa kích thước bản đồ */
+        #map {
+            height: 100vh; /* Chiếm toàn bộ chiều cao cửa sổ */
+        }
+
+        body{
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Phần tử chứa bản đồ -->
+<div id="map"></div>
+
+<!-- Leaflet JS từ CDN -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+
+    var map = L.map('map').setView([16.26963973530945, 107.48411048389792], 6);  // Vị trí trung tâm tại Việt Nam, zoom level 6
+
+    // Thêm lớp nền Viettel Map
+    L.tileLayer('https://api-maps.viettel.vn/gateway/mapservice/v1/styles/vtmap/{z}/{x}/{y}.png?access_token=4474ace29cd4d4fa14847303d2a6d6f0', {
+        attribution: '&copy; Viettel Maps'
+    }).addTo(map);
+
+    // Thêm lớp WMS từ GeoServer (có thể thay đổi lớp WMS theo nhu cầu)
+    var wmsLayer = L.tileLayer.wms('https://geoserver.viettelai.vn/geoserver/vspace/wms', {
+        layers: 'vspace:BD Vung gio Viet Nam',  // Tên lớp trong GeoServer
+        format: 'image/png',                   // Định dạng hình ảnh
+        transparent: true,                      // Để lớp nền trong suốt
+        version: '1.1.1',                       // Phiên bản WMS
+        attribution: 'Data from GeoServer'
+    }).addTo(map);
+
+</script>
+
+</body>
 </html>
